@@ -1,0 +1,48 @@
+import tkinter
+import matplotlib
+matplotlib.use('TkAgg')
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+
+Nx = 50
+Nt = int(8*10**3)
+L = 0.1
+D = 1.2e-4
+tau = 1e-2
+a = L/(Nx-1)
+epsilon = D*tau/(a**2)
+print("epsilon= ", round(epsilon,2))
+
+Ta = np.zeros((Nx,Nt))
+x = a * np.arange(0,Nx)
+t = tau * np.arange(0,Nt)
+
+def Solution1(Tg,Td):
+    Ta[0,1:Nt] = Tg
+    Ta[Nx-1,1:Nt] = Td
+    for q in range(Nt-1):
+        Ta[1:-1,q+1]=Ta[1:-1,q]+epsilon*(Ta[0:-2,q]+Ta[2:,q]-2*Ta[1:-1,q])
+    Ta[:,0]=0
+    return Ta
+
+
+
+print(Solution1(100,0))
+TW3 = Solution1(100,0)
+TW3=TW3[:,::-1]
+
+plt.clf()
+fig, ax = plt.subplots(figsize=(8, 4))
+
+cmap = colormaps['coolwarm']
+norm = plt.Normalize(vmin=0, vmax=100)
+im = ax.imshow(np.transpose(TW3), cmap=cmap, norm=norm, extent=[0,100,0,80], zorder=2, alpha=0.7)
+tick_positionsy = [0, 10, 20, 30, 40, 50, 60, 70, 80]
+ax.set_yticks(tick_positionsy)
+tick_positionsx = [0, 0.02, 0.04, 0.06, 0.08, 0.10]
+ax.set_xticklabels(tick_positionsx)
+plt.colorbar(im, ax=ax, label='Température (°C)')
+plt.xlabel('x(m)',size=14)
+plt.ylabel('temps(s)',size=14)
+plt.show()
