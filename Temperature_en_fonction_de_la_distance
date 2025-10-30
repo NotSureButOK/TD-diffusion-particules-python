@@ -1,0 +1,56 @@
+import tkinter
+import matplotlib
+matplotlib.use('TkAgg')
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+
+Nx = 50
+Nt = int(8*10**3)
+L = 0.1
+D = 1.2e-4
+tau = 1e-2
+a = L/(Nx-1)
+epsilon = D*tau/(a**2)
+print("epsilon= ", round(epsilon,2))
+
+Ta = np.zeros((Nx,Nt))
+x = a * np.arange(0,Nx)
+t = tau * np.arange(0,Nt)
+
+def Solution1(Tg,Td):
+    Ta[0,1:Nt] = Tg
+    Ta[Nx-1,1:Nt] = Td
+    for q in range(Nt-1):
+        Ta[1:-1,q+1]=Ta[1:-1,q]+epsilon*(Ta[0:-2,q]+Ta[2:,q]-2*Ta[1:-1,q])
+    Ta[:,0]=0
+    return Ta
+
+def Solution2(Tg,Td):
+
+    for oui in range(Nx):
+        Ta[oui] = np.linspace(Tg,Td,Nt)
+    demande_utilisateur = input("Y a-t-il une discontinuité de température au milieu de la barre ? : ")
+    if demande_utilisateur == "oui":
+        valeur_utilisateur = input("Quelle est donc cette valeur ? : ")
+        Ta[:,Nt//2 -10: Nt//2 + 10:] = valeur_utilisateur
+        for q in range(Nt//2,Nt - 1):
+            Ta[1:-1, q + 1] = Ta[1:-1, q] + epsilon * (Ta[0:-2, q] + Ta[2:, q] - 2 * Ta[1:-1, q])
+        for q in range(0,Nt//2-1):
+            Ta[1:-1, q - 1] = Ta[1:-1, q] + epsilon * (Ta[0:-2, q] + Ta[2:, q] - 2 * Ta[1:-1, q])
+    else:
+        for q in range(Nt-1):
+            Ta[1:-1,q+1]=Ta[1:-1,q]+epsilon*(Ta[0:-2,q]+Ta[2:,q]-2*Ta[1:-1,q])
+    return Ta
+
+
+
+
+print(Solution1(100,0))
+
+for t in range(0,10,10):
+    plt.plot(x,Solution1(100,0)[:,t])
+for u in range(0, 8000, 1000):
+    plt.plot(x, Solution1(100, 0)[:, u])
+plt.plot(x, Solution1(100, 0)[:, 5120])
+plt.show()
