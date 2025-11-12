@@ -60,7 +60,7 @@ print(oui)
 def animate(frame):
     oui[0:76] = 15 + 25*np.cos(4*np.pi*theta[frame]/11100)
     for d in range(75,126):
-        oui[d] = 0.9999*oui[d-1] #+ 1 * (oui[i,0:-2] - oui[i,1:-1]) + 2 * oui[i,1:-1]
+        oui[d] = 0.9999*oui[d-1]  + 15 #+ 1 * (oui[i,0:-2] - oui[i,1:-1]) + 2 * oui[i,1:-1]
 
         #oui[i+1,0] = oui[i+1,1]
         #oui[i+1,0] = oui[i+1,-1]
