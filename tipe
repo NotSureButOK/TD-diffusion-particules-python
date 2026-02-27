@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib import colormaps
 
+
+#https://www.reddit.com/r/math/comments/mr95j9/solving_3d_heat_equation_in_python_to_cook_a/?tl=fr
 """
 plt.close()
 cave_shape = (300, 500)   #(ordonnées,abscisses)
